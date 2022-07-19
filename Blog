@@ -1,0 +1,47 @@
+create table usuarios(
+    id_user serial primary key,
+    email varchar(255) not null
+);
+
+create table posts (
+    post_id serial primary key,
+    usuario_id int not null references usuarios(id_user),
+    titulo varchar(255) not null,
+    fecha date not null
+);
+
+create table comentarios(
+    comentario_id serial primary key,
+    usuario_id int not null references usuarios(id_user),
+    user_post int not null references posts(post_id),
+    texto varchar(255) not null,
+    fecha date not null
+);
+
+--Uniendo tablas con full join
+select * from usuarios full join posts on id_user = post_id;
+
+--Listar
+select email, post_id, titulo from usuarios
+join posts on id_user = post_id
+where usuario_id = 5;
+
+--Listar usuario06
+select email, texto, comentario_id from usuarios
+join comentarios on id_user = comentario_id
+where email = 'usuario06@hotmail.com';
+
+-- Usuarios sin post
+select * from usuarios
+left join posts on usuario_id = id_user 
+where usuario_id is null;
+
+-- Join
+select * from posts
+full join comentarios on post_id = user_post;
+
+-- Listar por fecha post de Junio
+select * from posts
+left join usuarios
+on post_id = usuario_id
+where fecha between '2020-06-01'and '2020-06-30'
